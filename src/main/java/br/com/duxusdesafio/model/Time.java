@@ -20,6 +20,7 @@ public class Time {
 	private List<ComposicaoTime> composicaoTime;
 
 	public Time() {
+
 	}
 
 	public Time(LocalDate data, List<ComposicaoTime> composicaoTime) {

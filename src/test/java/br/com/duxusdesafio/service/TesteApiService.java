@@ -61,7 +61,6 @@ public class TesteApiService {
     public void testTimeDaData(LocalDate data, List<Time> todosOsTimes, Time esperado) {
 
         Time timeRetornado = apiService.timeDaData(data, todosOsTimes);
-
         assertEquals(esperado, timeRetornado);
     }
 
