@@ -28,11 +28,10 @@ public class ApiService {
         // Pega o primeiro resultado encontrado
         // Caso nao haja resultado, retorna null
 
-        Time timeData = todosOsTimes.stream()
+        return todosOsTimes.stream()
                 .filter(time -> time.getData().equals(data))
                 .findFirst()
                 .orElse(null);
-        return timeData;
     }
 
     /**
@@ -42,10 +41,9 @@ public class ApiService {
     public Integrante integranteMaisUsado(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
         // TODO Implementar método seguindo as instruções!
         Stream<Integrante> IStream = StreamMapper(todosOsTimes, dataInicial, dataFinal);
-        Integrante integrantesUsados = IStream.min(Comparator.comparing(String::valueOf)).orElse(null);
         // Mapeia ComposicaoTime para Integrante
 
-        return integrantesUsados;
+        return IStream.min(Comparator.comparing(String::valueOf)).orElse(null);
     }
 
 
@@ -130,13 +128,12 @@ public class ApiService {
         List<Time> timesNoPeriodo = durantePeriodo(todosOsTimes, dataInicial, dataFinal); // Método que verifica o periodo analisado
 
         // Obtém a contagem de ocorrências de cada franquia dentro do período
-        Map<String, Long> contagemPorFuncao = timesNoPeriodo.stream()
+
+        return timesNoPeriodo.stream()
                 .collect(Collectors.groupingBy(
                         time -> time.getComposicaoTime().get(0).getIntegrante().getFuncao(), // Agrupa por franquia do primeiro integrante do time
                         Collectors.counting() // Conta o número de times por franquia
                 ));
-
-        return contagemPorFuncao;
     }
 
     private List<Time> durantePeriodo(List<Time> todosOsTimes, LocalDate dataInicial, LocalDate dataFinal) {
