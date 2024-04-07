@@ -1,12 +1,23 @@
 package br.com.duxusdesafio.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "time")
+
 public class Time {
 
 	@Id
@@ -14,44 +25,20 @@ public class Time {
 	private long id;
 
 	@Column
+	@NotNull
+	private String nome;
+
+	@Column
+	@NotNull
     private LocalDate data;
-	
+
 	@OneToMany(mappedBy = "time", cascade = CascadeType.ALL)
 	private List<ComposicaoTime> composicaoTime;
-
-	public Time() {
-
-	}
 
 	public Time(LocalDate data, List<ComposicaoTime> composicaoTime) {
 		this.data = data;
 		this.composicaoTime = composicaoTime;
 	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public LocalDate getData() {
-		return data;
-	}
-
-	public void setData(LocalDate data) {
-		this.data = data;
-	}
-
-	public List<ComposicaoTime> getComposicaoTime() {
-		return composicaoTime;
-	}
-
-	public void setComposicaoTime(List<ComposicaoTime> composicaoTime) {
-		this.composicaoTime = composicaoTime;
-	}
-
 
 	@Override
 	public final boolean equals(Object o) {
