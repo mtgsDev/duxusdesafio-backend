@@ -24,7 +24,10 @@ public class ApiService {
      * Vai retornar uma lista com os nomes dos integrantes do time daquela data
      */
     public Time timeDaData(LocalDate data, List<Time> todosOsTimes) {
-        // Filtra o time com a data correspondente a data dada
+        if (data == null) {
+            return null;
+        }
+            // Filtra o time com a data correspondente a data dada
         // Pega o primeiro resultado encontrado
         // Caso nao haja resultado, retorna null
 
@@ -102,6 +105,18 @@ public class ApiService {
      */
     public Map<String, Long> contagemPorFranquia(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
         // Filtra os times que estão dentro do período especificado
+        if (dataInicial == null || dataFinal == null) {
+
+            Map<String, Long> contagemPorFranquia = todosOsTimes.stream()
+                    .collect(Collectors.groupingBy(
+                            time -> time.getComposicaoTime().get(0).getIntegrante().getFranquia(), // Agrupa por franquia do primeiro integrante do time
+                            Collectors.counting() // Conta o número de times por franquia
+                    ));
+
+            contagemPorFranquia.replaceAll((franquia, contagem) -> contagem - 1);
+
+            return contagemPorFranquia;
+        }
         List<Time> timesNoPeriodo = durantePeriodo(todosOsTimes, dataInicial, dataFinal); // Método que verifica o periodo analisado
 
         // Obtém a contagem de ocorrências de cada franquia dentro do período
@@ -125,6 +140,13 @@ public class ApiService {
      */
     public Map<String, Long> contagemPorFuncao(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
         // TODO Implementar método seguindo as instruções!
+        if (dataInicial == null || dataFinal == null) {
+            return todosOsTimes.stream()
+                    .collect(Collectors.groupingBy(
+                            time -> time.getComposicaoTime().get(0).getIntegrante().getFuncao(), // Agrupa por franquia do primeiro integrante do time
+                            Collectors.counting() // Conta o número de times por franquia
+                    ));
+        }
         List<Time> timesNoPeriodo = durantePeriodo(todosOsTimes, dataInicial, dataFinal); // Método que verifica o periodo analisado
 
         // Obtém a contagem de ocorrências de cada franquia dentro do período
@@ -145,6 +167,11 @@ public class ApiService {
      */
 
     private Stream<Integrante> StreamMapper(List<Time> todosOsTimes, LocalDate dataInicial, LocalDate dataFinal) {
+        if (dataInicial == null || dataFinal == null) {
+            return todosOsTimes.stream()
+                    .flatMap(time -> time.getComposicaoTime().stream()) // FlatMap para obter uma stream de ComposicaoTime
+                    .map(ComposicaoTime::getIntegrante);
+        }
         List<Time> mapper = durantePeriodo(todosOsTimes, dataInicial, dataFinal);
 
         return mapper.stream()
