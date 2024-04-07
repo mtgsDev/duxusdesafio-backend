@@ -1,5 +1,10 @@
 package br.com.duxusdesafio.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -7,6 +12,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "integrante")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Integrante {
 	
 	@Id
@@ -28,54 +37,10 @@ public class Integrante {
 	@OneToMany(mappedBy = "integrante")
 	private List<ComposicaoTime> composicaoTime;
 
-
-	public Integrante() {
-	}
-
 	public Integrante(String franquia, String nome, String funcao, List<ComposicaoTime> composicaoTime) {
 		this.franquia = franquia;
 		this.nome = nome;
 		this.funcao = funcao;
-		this.composicaoTime = composicaoTime;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getFranquia() {
-		return franquia;
-	}
-
-	public void setFranquia(String franquia) {
-		this.franquia = franquia;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getFuncao() {
-		return funcao;
-	}
-
-	public void setFuncao(String funcao) {
-		this.funcao = funcao;
-	}
-
-	public List<ComposicaoTime> getComposicaoTime() {
-		return composicaoTime;
-	}
-
-	public void setComposicaoTime(List<ComposicaoTime> composicaoTime) {
 		this.composicaoTime = composicaoTime;
 	}
 
