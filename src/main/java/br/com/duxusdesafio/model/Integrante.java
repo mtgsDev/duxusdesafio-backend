@@ -48,9 +48,8 @@ public class Integrante {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof Integrante)) return false;
-		Integrante that = (Integrante) o;
-		return id == that.id && Objects.equals(franquia, that.franquia) && Objects.equals(nome, that.nome) && Objects.equals(funcao, that.funcao);
+		if (!(o instanceof Integrante that)) return false;
+        return id == that.id && Objects.equals(franquia, that.franquia) && Objects.equals(nome, that.nome) && Objects.equals(funcao, that.funcao);
 	}
 
 	@Override

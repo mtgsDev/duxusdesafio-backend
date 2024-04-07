@@ -1,15 +1,11 @@
 package br.com.duxusdesafio.service.impl;
-
 import br.com.duxusdesafio.dto.IntegranteDTO;
-
 import br.com.duxusdesafio.model.Integrante;
 import br.com.duxusdesafio.repository.IntegranteRepository;
 import br.com.duxusdesafio.service.IntegranteService;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 public class IntegranteServiceImpl implements IntegranteService {
