@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/composicoes-time")
+@RequestMapping("/composicao-time")
 public class ComposicaoTimeController {
 
     private final ComposicaoTimeService composicaoTimeService;
