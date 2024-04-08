@@ -88,7 +88,7 @@ public class TimeController {
         return new ResponseEntity<>(timeDto, HttpStatus.OK);
     }
 
-    @GetMapping("/timeMaisComum")
+    @GetMapping("/TimeMaisComum")
     public ResponseEntity<List<String>> getTimeMaisComum(
             @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
             @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
@@ -108,5 +108,20 @@ public class TimeController {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
+    @GetMapping("/ContagemPorFranquia")
+    public ResponseEntity<Map<String, String>> getContagemFranquia(@RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+                                                                   @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+
+        return null;
+    }
+
+    @GetMapping("/ContagemPorFuncao")
+    public ResponseEntity<Map<String, Long>> getContagemFuncao(@RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+                                                                   @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+
+        Map<String, Long> contagemDeFranquia = timeService.contagemPorFuncao(dataInicial, dataFinal);
+
+        return new ResponseEntity<>(contagemDeFranquia, HttpStatus.OK);
+    }
 
 }

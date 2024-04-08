@@ -16,7 +16,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class TimeServiceImpl implements TimeService {
@@ -206,9 +205,29 @@ public class TimeServiceImpl implements TimeService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Map<String, Long> contagemPorFuncao(LocalDate dataInicial, LocalDate dataFinal) {
+        List<Time> todosOsTimes = timeRepository.findAll();
+
+        List<Time> timesNoPeriodo = durantePeriodo(todosOsTimes, dataInicial, dataFinal);
+
+        // Utiliza flatMap para acessar diretamente os integrantes de todos os times no período
+        return timesNoPeriodo.stream()
+                .flatMap(time -> time.getComposicaoTime().stream())
+                .filter(composicaoTime -> composicaoTime.getIntegrante() != null) // Filtra integrantes não nulos
+                .collect(Collectors.groupingBy(
+                        composicaoTime -> composicaoTime.getIntegrante().getFuncao(), // Agrupa por função do integrante
+                        Collectors.counting() // Conta o número de ocorrências de cada função
+                ));
+    }
+
     // Método auxiliar para verificar se uma data está dentro do intervalo
     private boolean isDateInRange(LocalDate date, LocalDate startDate, LocalDate endDate) {
         return !date.isBefore(startDate) && !date.isAfter(endDate);
+    }
+
+    private List<Time> durantePeriodo(List<Time> todosOsTimes, LocalDate dataInicial, LocalDate dataFinal) {
+        return todosOsTimes.stream().filter(time -> !time.getData().isBefore(dataInicial) && !time.getData().isAfter(dataFinal)).toList();
     }
 
 }

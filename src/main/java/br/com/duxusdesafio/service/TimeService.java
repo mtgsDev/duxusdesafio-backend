@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface TimeService {
@@ -27,4 +28,6 @@ public interface TimeService {
     List<String> timeMaisComum(LocalDate dataInicial, LocalDate dataFinal);
 
     String funcaoMaisComum(LocalDate dataInicial, LocalDate dataFinal);
+
+    Map<String, Long> contagemPorFuncao(LocalDate dataInicial, LocalDate dataFinal);
 }
