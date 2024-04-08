@@ -11,6 +11,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/** Testes funcionando, porém alguns métodos foram atualizados para seguir a lógica da API
+ *  Os Métodos utilizados nas rotas estão todos dentro dos arquivos ServiceImpl
+ */
+
 /**
  * Service que possuirá as regras de negócio para o processamento dos dados
  * solicitados no desafio!
@@ -133,9 +137,10 @@ public class ApiService {
 
         return contagemPorFranquia;
 
-        //
-        /* Fix: teste com lógica incorreta, se o teste envia 3 times para analise como o retorno precisa ser NBA=2 ?
-        * */
+        
+        /**
+         *  Fix: teste com lógica incorreta, se o teste envia 3 times para analise como o retorno precisa ser NBA=2 ?
+         */
     }
 
     /**

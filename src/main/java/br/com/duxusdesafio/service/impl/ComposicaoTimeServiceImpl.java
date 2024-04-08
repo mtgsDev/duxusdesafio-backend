@@ -30,6 +30,7 @@ public class ComposicaoTimeServiceImpl implements ComposicaoTimeService {
         this.integranteRepository = integranteRepository;
     }
 
+    // Get todas composições, metodo utiliza findAll() da JpaRepository, recebe o obj, realiza um stream e salva em uma lista.
     @Override
     public List<ComposicaoTimeDTO> listarComposicoes() {
         List<ComposicaoTime> composicoes = composicaoTimeRepository.findAll();
@@ -38,6 +39,8 @@ public class ComposicaoTimeServiceImpl implements ComposicaoTimeService {
                 .collect(Collectors.toList());
     }
 
+
+    // Get por id, metodo utiliza findById() da JpaRepository, recebe o obj, realiza um stream e salva em uma lista.
     @Override
     public ComposicaoTimeDTO buscarComposicaoPorId(Long id) {
         ComposicaoTime composicao = composicaoTimeRepository.findById(id)

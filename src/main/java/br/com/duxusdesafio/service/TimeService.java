@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+
+//Camada de Interface dos métodos criados para TimeService.
 @Service
 public interface TimeService {
     //CRUD

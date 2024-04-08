@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+//Camada de Interface dos métodos criados para ComposicaoTimeService.
 @Service
 public interface ComposicaoTimeService {
 

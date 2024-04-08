@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+
+//Camada de Interface dos métodos criados para IntegranteService.
 @Service
 public interface IntegranteService {
 
