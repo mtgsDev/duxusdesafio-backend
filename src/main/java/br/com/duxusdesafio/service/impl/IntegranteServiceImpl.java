@@ -26,7 +26,7 @@ public class IntegranteServiceImpl implements IntegranteService {
     @Autowired
     private final IntegranteRepository integranteRepository;
     @Autowired
-    private TimeRepository timeRepository; // Repositório para acesso às composições de time
+    private final TimeRepository timeRepository; // Repositório para acesso às composições de time
 
 
     public IntegranteServiceImpl(IntegranteRepository integranteRepository, TimeRepository timeRepository) {
@@ -34,6 +34,7 @@ public class IntegranteServiceImpl implements IntegranteService {
         this.timeRepository = timeRepository;
     }
 
+    @Override
     public List<IntegranteDTO> listarTodosIntegrantes() {
         List<Integrante> integrante = integranteRepository.findAll();
         return integrante.stream()
@@ -41,6 +42,7 @@ public class IntegranteServiceImpl implements IntegranteService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public IntegranteDTO criarIntegrante(IntegranteDTO integranteDTO) {
         if (integranteJaExistente(integranteDTO)) {
             throw new IllegalArgumentException("Integrante com os mesmos atributos já existe.");
@@ -55,11 +57,12 @@ public class IntegranteServiceImpl implements IntegranteService {
         return convertToDTO(novoIntegrante);
     }
 
+    @Override
     public IntegranteDTO buscarIntegrantePorId(Long id) {
         Optional<Integrante> integranteOptional = integranteRepository.findById(id);
         return integranteOptional.map(this::convertToDTO).orElse(null);
     }
-
+    @Override
     public IntegranteDTO atualizarIntegrante(Long id, IntegranteDTO integranteDTO) {
         Optional<Integrante> integranteOptional = integranteRepository.findById(id);
         if (integranteOptional.isPresent()) {
@@ -104,35 +107,6 @@ public class IntegranteServiceImpl implements IntegranteService {
         }
     }
 
-    private IntegranteDTO toIntegranteDTO(Integrante integrante) {
-        if (integrante == null) {
-            return null;
-        }
-        IntegranteDTO integranteDTO = new IntegranteDTO();
-        integranteDTO.setId(integrante.getId());
-        integranteDTO.setFranquia(integrante.getFranquia());
-        integranteDTO.setNome(integrante.getNome());
-        integranteDTO.setFuncao(integrante.getFuncao());
-        return integranteDTO;
-    }
-
-    private List<Time> durantePeriodo(List<Time> todosOsTimes, LocalDate dataInicial, LocalDate dataFinal) {
-        return todosOsTimes.stream().filter(time -> !time.getData().isBefore(dataInicial) && !time.getData().isAfter(dataFinal)).toList();
-    }
-
-    public Stream<IntegranteDTO> StreamMapper(List<TimeDTO> todosOsTimes, LocalDate dataInicial, LocalDate dataFinal) {
-        if (dataInicial == null || dataFinal == null) {
-            return todosOsTimes.stream()
-                    .flatMap(timeDTO -> timeDTO.getComposicaoTime().stream()) // FlatMap para obter uma stream de ComposicaoTimeDTO
-                    .map(this::toIntegranteDTO); // Mapeia ComposicaoTimeDTO para IntegranteDTO
-        }
-
-        List<TimeDTO> filteredTimes = filterTimesByPeriod(todosOsTimes, dataInicial, dataFinal);
-
-        return filteredTimes.stream()
-                .flatMap(timeDTO -> timeDTO.getComposicaoTime().stream()) // FlatMap para obter uma stream de ComposicaoTimeDTO
-                .map(this::toIntegranteDTO); // Mapeia ComposicaoTimeDTO para IntegranteDTO
-    }
 
     private IntegranteDTO toIntegranteDTO(ComposicaoTimeDTO composicaoTimeDTO) {
         IntegranteDTO integranteDTO = new IntegranteDTO();
@@ -171,14 +145,35 @@ public class IntegranteServiceImpl implements IntegranteService {
     }
 
 
-    /*
-     * erro 500
-     * */
-//    @Override
-//    public List<IntegranteDTO> buscarTodosIntegrantes() {
-//        List<Integrante> integrantes = integranteRepository.findAll();
-//        return integrantes.stream()
-//                .map(this::toDTO)
-//                .collect(Collectors.toList());
+
+    //    private IntegranteDTO toIntegranteDTO(Integrante integrante) {
+//        if (integrante == null) {
+//            return null;
+//        }
+//        IntegranteDTO integranteDTO = new IntegranteDTO();
+//        integranteDTO.setId(integrante.getId());
+//        integranteDTO.setFranquia(integrante.getFranquia());
+//        integranteDTO.setNome(integrante.getNome());
+//        integranteDTO.setFuncao(integrante.getFuncao());
+//        return integranteDTO;
 //    }
+//
+//    private List<Time> durantePeriodo(List<Time> todosOsTimes, LocalDate dataInicial, LocalDate dataFinal) {
+//        return todosOsTimes.stream().filter(time -> !time.getData().isBefore(dataInicial) && !time.getData().isAfter(dataFinal)).toList();
+//    }
+//
+//    public Stream<IntegranteDTO> StreamMapper(List<TimeDTO> todosOsTimes, LocalDate dataInicial, LocalDate dataFinal) {
+//        if (dataInicial == null || dataFinal == null) {
+//            return todosOsTimes.stream()
+//                    .flatMap(timeDTO -> timeDTO.getComposicaoTime().stream()) // FlatMap para obter uma stream de ComposicaoTimeDTO
+//                    .map(this::toIntegranteDTO); // Mapeia ComposicaoTimeDTO para IntegranteDTO
+//        }
+//
+//        List<TimeDTO> filteredTimes = filterTimesByPeriod(todosOsTimes, dataInicial, dataFinal);
+//
+//        return filteredTimes.stream()
+//                .flatMap(timeDTO -> timeDTO.getComposicaoTime().stream()) // FlatMap para obter uma stream de ComposicaoTimeDTO
+//                .map(this::toIntegranteDTO); // Mapeia ComposicaoTimeDTO para IntegranteDTO
+//    }
+
 }

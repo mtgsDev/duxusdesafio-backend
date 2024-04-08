@@ -111,7 +111,7 @@ public class IntegranteController {
 
 
 
-    @GetMapping("/funcaomaiscomum")
+    @GetMapping("/FuncaoMaisComum")
     public ResponseEntity<Map<String, Object>> funcaoMaisComum(
             // Pegando a data dos parâmetros da requisição
             @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> dataInicial,
@@ -165,7 +165,6 @@ public class IntegranteController {
         //Retorno da resposta
 //        return new ResponseEntity<>(franquiaMaisFamosa, HttpStatus.OK);
         return null;
-
     }
 
     @GetMapping("/contagemfranquia")

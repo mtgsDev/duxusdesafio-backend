@@ -93,5 +93,4 @@ public class ComposicaoTimeServiceImpl implements ComposicaoTimeService {
         // Outras atribuições e lógica de conversão...
         return composicaoTime;
     }
-//TODO PULAR ESSA PARTE E REALIZAR A IMPLEMENTACAO DOS METODOS E DEPOIS VOLTAR E RESOLVER ESSE B.O
 }

@@ -26,4 +26,5 @@ public interface TimeService {
 
     List<String> timeMaisComum(LocalDate dataInicial, LocalDate dataFinal);
 
+    String funcaoMaisComum(LocalDate dataInicial, LocalDate dataFinal);
 }

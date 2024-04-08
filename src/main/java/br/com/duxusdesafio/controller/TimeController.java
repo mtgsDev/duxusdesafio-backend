@@ -97,4 +97,16 @@ public class TimeController {
 
         return new ResponseEntity<>(nomesIntegrantesMaisComuns, HttpStatus.OK);
     }
+
+    @GetMapping("/FuncaoMaisComum")
+    public ResponseEntity<Map<String, String>> getFuncaoMaisComum(@RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+                                                     @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal){
+        String funcaoMaisComum = timeService.funcaoMaisComum(dataInicial, dataFinal);
+
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("Função", funcaoMaisComum);
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    }
+
+
 }

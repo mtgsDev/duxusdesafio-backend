@@ -13,10 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -116,6 +114,35 @@ public class TimeServiceImpl implements TimeService {
 
     public void deletarTime(Long id) {
         timeRepository.deleteById(id);
+    }
+
+@Override
+    public String funcaoMaisComum(LocalDate dataInicial, LocalDate dataFinal){
+        List<Time> times = timeRepository.findByDataBetween(dataInicial, dataFinal);
+
+        // Mapeia os integrantes de todos os times dentro do período
+        List<Integrante> integrantes = times.stream()
+                .flatMap(time -> time.getComposicaoTime().stream())
+                .map(ComposicaoTime::getIntegrante)
+                .filter(Objects::nonNull) // Filtra integrantes não nulos
+                .toList();
+
+        // Obtém a lista de nomes de integrantes dos times no período e conta a ocorrencia de cada nome de integrante
+        List<String> funcaoComum = integrantes.stream().map(Integrante::getFuncao).toList();
+        //Conta a ocorrencia de cada funcao
+        Counter(funcaoComum);
+
+        return MaisComum(Counter(funcaoComum));
+    }
+
+    private String MaisComum(Map<String, Long> T) {
+        return T.entrySet().stream().max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
+    }
+
+    private Map<String, Long> Counter(List<String> T) {
+        return T.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }
 
     private TimeDTO convertToDTO(Time time) {
