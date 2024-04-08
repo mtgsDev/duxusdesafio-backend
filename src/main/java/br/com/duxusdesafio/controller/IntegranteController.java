@@ -1,8 +1,11 @@
 package br.com.duxusdesafio.controller;
 
 import br.com.duxusdesafio.dto.IntegranteDTO;
+import br.com.duxusdesafio.dto.TimeDTO;
+import br.com.duxusdesafio.model.ComposicaoTime;
 import br.com.duxusdesafio.model.Integrante;
 import br.com.duxusdesafio.model.Time;
+import br.com.duxusdesafio.repository.ComposicaoTimeRepository;
 import br.com.duxusdesafio.repository.TimeRepository;
 import br.com.duxusdesafio.service.ApiService;
 import br.com.duxusdesafio.service.IntegranteService;
@@ -15,10 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @AllArgsConstructor
 @RestController
@@ -31,21 +31,14 @@ public class IntegranteController {
     private ApiService apiService;
     @Autowired
     private TimeRepository timeRepository;
+    @Autowired
+    private ComposicaoTimeRepository composicaoTimeRepository;
 
-    /*
-    * erro 500;
-    * */
-//    @GetMapping
-//    public ResponseEntity<List<IntegranteDTO>> getAllIntegrantes() {
-//        try {
-//            List<IntegranteDTO> integrantes = integranteService.buscarTodosIntegrantes();
-//            return ResponseEntity.ok(integrantes);
-//        } catch (Exception e) {
-//            // Em caso de exceção, retornar uma mensagem de erro com status 500
-//            String errorMessage = "Erro ao buscar todos os integrantes: " + e.getMessage();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
-//        }
-//    }
+    @GetMapping
+    public ResponseEntity<List<IntegranteDTO>> listarTodosTimes() {
+        List<IntegranteDTO> integrantes = integranteService.listarTodosIntegrantes();
+        return ResponseEntity.ok(integrantes);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<IntegranteDTO> buscarIntegrantePorId(@PathVariable Long id) {
@@ -90,28 +83,33 @@ public class IntegranteController {
                 .body("Ocorreu um erro inesperado. Detalhes: " + e.getMessage());
     }
 
-    @GetMapping("/integrantemaisusado")
-    public ResponseEntity<Object> integranteMaisUsado(
-            // Pegando a data dos parâmetros da requisição
-            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> dataInicial,
-            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> dataFinal)
-    {
-        LocalDate dataInicialReal = dataInicial.orElse(LocalDate.MIN);
-        LocalDate dataFinalReal = dataFinal.orElse(LocalDate.MAX);
+    @GetMapping("/IntegranteMaisUsado")
+    public ResponseEntity<List<IntegranteDTO>> getAllIntegrantes() {
+        try {
+            List<IntegranteDTO> integrantes = integranteService.listarTodosIntegrantes();
 
-        // Coloca todos os times em uma lista de Time
-        List<Time> times = timeRepository.findAll();
-        // Chama o método timeDaData e passa data e a lista de times como argumento
-        Integrante integrante = apiService.integranteMaisUsado(dataInicialReal, dataFinalReal, times);
-        // Criando um Map que irá receber o integrante mais usado
-        Map<String, Object> integranteMaisUsado = new HashMap<>();
+            if (integrantes == null || integrantes.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
 
-        // Passando a key "integrante mais usado" e pegando o nome do integrante
-        integranteMaisUsado.put("Integrante Mais Usado", integrante.getNome());
+            // Verifica se algum IntegranteDTO possui ID nulo e remove-o da lista
+            integrantes.removeIf(integrante -> integrante.getId() == null);
 
-        //Retorno da resposta
-        return new ResponseEntity<>(integranteMaisUsado, HttpStatus.OK);
+            if (integrantes.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok(integrantes);
+        } catch (Exception e) {
+            // Em caso de exceção, retornar uma mensagem de erro com status 500
+            String errorMessage = "Erro ao buscar todos os integrantes: " + e.getMessage();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+        }
+
     }
+
+
+
 
     @GetMapping("/funcaomaiscomum")
     public ResponseEntity<Map<String, Object>> funcaoMaisComum(
