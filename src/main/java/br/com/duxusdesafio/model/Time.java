@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,10 +36,15 @@ public class Time {
 	@OneToMany(mappedBy = "time", cascade = CascadeType.ALL)
 	private List<ComposicaoTime> composicaoTime;
 
+	@OneToMany(mappedBy = "time", cascade = CascadeType.ALL)
+	private List<Integrante> integrantes = new ArrayList<>();
+
+
 	public Time(LocalDate data, List<ComposicaoTime> composicaoTime) {
 		this.data = data;
 		this.composicaoTime = composicaoTime;
 	}
+
 
 	@Override
 	public final boolean equals(Object o) {

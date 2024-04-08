@@ -37,6 +37,11 @@ public class Integrante {
 	@OneToMany(mappedBy = "integrante")
 	private List<ComposicaoTime> composicaoTime;
 
+	@ManyToOne
+	@JoinColumn(name = "time_id")
+	private Time time;
+
+
 	public Integrante(String franquia, String nome, String funcao, List<ComposicaoTime> composicaoTime) {
 		this.franquia = franquia;
 		this.nome = nome;

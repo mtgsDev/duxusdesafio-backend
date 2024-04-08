@@ -8,5 +8,4 @@ import java.util.Optional;
 
 public interface TimeRepository extends JpaRepository<Time, Long> {
     Optional<Time> findByNomeAndData(String nome, LocalDate data);
-
 }

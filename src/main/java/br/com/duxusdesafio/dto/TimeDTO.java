@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Getter
@@ -19,4 +20,5 @@ public class TimeDTO {
     private String nome;
     @NotNull
     private LocalDate data;
+    private List<IntegranteDTO> integrantes;
 }

@@ -27,12 +27,9 @@ public class DadosParaTesteApiService {
     private Integrante michael_jordan;
     private Integrante denis_rodman;
     private Integrante scottie_pippen;
-
     private Time timeChicagoBullsDe1994;
     private Time timeChicagoBullsDe1995;
-
     private Time timeDetroidPistonsDe1993;
-
     private List<Time> todosOsTimes;
 
     public DadosParaTesteApiService() {
