@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TimeServiceImpl implements TimeService {
@@ -97,6 +98,7 @@ public class TimeServiceImpl implements TimeService {
 
     public List<TimeDTO> listarTodosTimes() {
         List<Time> times = timeRepository.findAll();
+
         return times.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -125,6 +127,8 @@ public class TimeServiceImpl implements TimeService {
                 .map(ComposicaoTime::getIntegrante)
                 .filter(Objects::nonNull) // Filtra integrantes não nulos
                 .toList();
+
+
 
         // Obtém a lista de nomes de integrantes dos times no período e conta a ocorrencia de cada nome de integrante
         List<String> funcaoComum = integrantes.stream().map(Integrante::getFuncao).toList();
@@ -205,6 +209,31 @@ public class TimeServiceImpl implements TimeService {
                 .collect(Collectors.toList());
     }
 
+    public String franquiaMaisFamosa(LocalDate dataInicial, LocalDate dataFinal) {
+        List<Time> todosOsTimes = timeRepository.findAll();
+
+        // TODO Implementar método seguindo as instruções!
+        Stream<Integrante> IntegStream = StreamMapper(todosOsTimes, dataInicial, dataFinal);
+        List<String> franquia = IntegStream.map(Integrante::getFranquia).toList();
+        //Conta a ocorrencia de cada funcao
+        Map<String, Long> franquiaMaisFamosa = Counter(franquia);
+        //retorna a franquia mais comum
+        return MaisComum(franquiaMaisFamosa);
+    }
+
+    private Stream<Integrante> StreamMapper(List<Time> todosOsTimes, LocalDate dataInicial, LocalDate dataFinal) {
+        if (dataInicial == null || dataFinal == null) {
+            return todosOsTimes.stream()
+                    .flatMap(time -> time.getComposicaoTime().stream()) // FlatMap para obter uma stream de ComposicaoTime
+                    .map(ComposicaoTime::getIntegrante);
+        }
+        List<Time> mapper = durantePeriodo(todosOsTimes, dataInicial, dataFinal);
+
+        return mapper.stream()
+                .flatMap(time -> time.getComposicaoTime().stream()) // FlatMap para obter uma stream de ComposicaoTime
+                .map(ComposicaoTime::getIntegrante); // Mapeia ComposicaoTime para Integrante
+    }
+
     @Override
     public Map<String, Long> contagemPorFuncao(LocalDate dataInicial, LocalDate dataFinal) {
         List<Time> todosOsTimes = timeRepository.findAll();
@@ -221,6 +250,22 @@ public class TimeServiceImpl implements TimeService {
                 ));
     }
 
+    @Override
+    public Map<String, Long> contagemPorFranquia(LocalDate dataInicial, LocalDate dataFinal) {
+
+        List<Time> todosOsTimes = timeRepository.findAll();
+
+        List<Time> timesNoPeriodo = durantePeriodo(todosOsTimes, dataInicial, dataFinal);
+
+        return timesNoPeriodo.stream()
+                .flatMap(time -> time.getComposicaoTime().stream())
+                .filter(composicaoTime -> composicaoTime.getIntegrante() != null)
+                .collect(Collectors.groupingBy(
+                        composicaoTime -> composicaoTime.getIntegrante().getFranquia(),Collectors.counting()
+                ));
+        // Filtra os times que estão dentro do período especificado
+    }
+
     // Método auxiliar para verificar se uma data está dentro do intervalo
     private boolean isDateInRange(LocalDate date, LocalDate startDate, LocalDate endDate) {
         return !date.isBefore(startDate) && !date.isAfter(endDate);
@@ -229,5 +274,6 @@ public class TimeServiceImpl implements TimeService {
     private List<Time> durantePeriodo(List<Time> todosOsTimes, LocalDate dataInicial, LocalDate dataFinal) {
         return todosOsTimes.stream().filter(time -> !time.getData().isBefore(dataInicial) && !time.getData().isAfter(dataFinal)).toList();
     }
+
 
 }

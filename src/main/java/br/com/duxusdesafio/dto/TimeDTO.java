@@ -21,5 +21,4 @@ public class TimeDTO {
     @NotNull
     private LocalDate data;
     private List<IntegranteDTO> integrantes;
-    private List<ComposicaoTimeDTO> composicaoTime;
 }

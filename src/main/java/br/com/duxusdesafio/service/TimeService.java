@@ -11,6 +11,7 @@ import java.util.Map;
 
 @Service
 public interface TimeService {
+    //CRUD
     TimeDTO criarTime(TimeDTO timeDTO);
 
     TimeDTO buscarTimePorId(Long id);
@@ -21,6 +22,7 @@ public interface TimeService {
 
     void deletarTime(Long id);
 
+    //MÉTODOS
     TimeDTO criarTimeComIntegrantes(TimeDTO timeDTO);
 
     TimeDTO timeDaData(LocalDate data);
@@ -29,5 +31,10 @@ public interface TimeService {
 
     String funcaoMaisComum(LocalDate dataInicial, LocalDate dataFinal);
 
+    String franquiaMaisFamosa(LocalDate dataInicial, LocalDate dataFinal);
+
     Map<String, Long> contagemPorFuncao(LocalDate dataInicial, LocalDate dataFinal);
+
+    Map<String, Long> contagemPorFranquia(LocalDate dataInicial, LocalDate dataFinal);
+
 }

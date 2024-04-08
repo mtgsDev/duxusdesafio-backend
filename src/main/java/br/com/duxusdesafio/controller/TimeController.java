@@ -98,6 +98,17 @@ public class TimeController {
         return new ResponseEntity<>(nomesIntegrantesMaisComuns, HttpStatus.OK);
     }
 
+    @GetMapping("/FranquiaMaisFamosa")
+    public  ResponseEntity<Map<String, String>> getFranquiaFamosa(
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+
+        String franquiaMaisFamosa = timeService.franquiaMaisFamosa(dataInicial, dataFinal);
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("Franquia", franquiaMaisFamosa);
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    }
+
     @GetMapping("/FuncaoMaisComum")
     public ResponseEntity<Map<String, String>> getFuncaoMaisComum(@RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
                                                      @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal){
@@ -109,19 +120,22 @@ public class TimeController {
     }
 
     @GetMapping("/ContagemPorFranquia")
-    public ResponseEntity<Map<String, String>> getContagemFranquia(@RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+    public ResponseEntity<Map<String, Long>> getContagemFranquia(@RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
                                                                    @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
 
-        return null;
+        Map<String, Long> contagemDeFranquia = timeService.contagemPorFranquia(dataInicial, dataFinal);
+
+        return new ResponseEntity<>(contagemDeFranquia, HttpStatus.OK);
     }
+
 
     @GetMapping("/ContagemPorFuncao")
     public ResponseEntity<Map<String, Long>> getContagemFuncao(@RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
                                                                    @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
 
-        Map<String, Long> contagemDeFranquia = timeService.contagemPorFuncao(dataInicial, dataFinal);
+        Map<String, Long> contagemDeFuncao = timeService.contagemPorFuncao(dataInicial, dataFinal);
 
-        return new ResponseEntity<>(contagemDeFranquia, HttpStatus.OK);
+        return new ResponseEntity<>(contagemDeFuncao, HttpStatus.OK);
     }
 
 }
