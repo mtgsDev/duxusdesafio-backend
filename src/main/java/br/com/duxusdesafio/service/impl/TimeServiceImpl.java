@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TimeServiceImpl implements TimeService {
@@ -156,7 +158,30 @@ public class TimeServiceImpl implements TimeService {
     }
 
     @Override
-    public TimeDTO timeMaisComum(LocalDate dataInicial, LocalDate dataFinal) {
-        return null;
+    public List<String> timeMaisComum(LocalDate dataInicial, LocalDate dataFinal) {
+        List<Time> todosOsTimes = timeRepository.findAll();
+
+        // Filtra os times pelo intervalo de datas
+        List<Time> timesNoIntervalo = todosOsTimes.stream()
+                .filter(time -> isDateInRange(time.getData(), dataInicial, dataFinal))
+                .toList();
+
+        // Filtra integrantes dos times no período e conta a ocorrência de cada nome de integrante
+        Map<String, Long> nomeIntegranteCountMap = timesNoIntervalo.stream()
+                .flatMap(time -> time.getComposicaoTime().stream())
+                .map(composicaoTime -> composicaoTime.getIntegrante().getNome())
+                .collect(Collectors.groupingBy(n -> n, Collectors.counting()));
+
+        // Retorna os nomes de integrantes que ocorreram pelo menos uma vez
+        return nomeIntegranteCountMap.entrySet().stream()
+                .filter(entry -> entry.getValue() >= 1)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
+
+    // Método auxiliar para verificar se uma data está dentro do intervalo
+    private boolean isDateInRange(LocalDate date, LocalDate startDate, LocalDate endDate) {
+        return !date.isBefore(startDate) && !date.isAfter(endDate);
+    }
+
 }

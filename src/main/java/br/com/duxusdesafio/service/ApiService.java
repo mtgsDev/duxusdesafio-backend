@@ -15,6 +15,9 @@ import java.util.stream.Stream;
  * Service que possuirá as regras de negócio para o processamento dos dados
  * solicitados no desafio!
  *
+ * @implNote
+ * DONE: Realizei a separação do ApiService em 3 camadas principais de Service, Interface ServiceImpl
+ * Necessário reestruturar os testes dessas classes.
  * @author carlosau
  */
 @Service

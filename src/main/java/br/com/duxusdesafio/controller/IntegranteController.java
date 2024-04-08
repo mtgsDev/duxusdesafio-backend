@@ -112,4 +112,106 @@ public class IntegranteController {
         //Retorno da resposta
         return new ResponseEntity<>(integranteMaisUsado, HttpStatus.OK);
     }
+
+    @GetMapping("/funcaomaiscomum")
+    public ResponseEntity<Map<String, Object>> funcaoMaisComum(
+            // Pegando a data dos parâmetros da requisição
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> dataFinal) {
+
+        // Verifica se a primeira data é nula
+        LocalDate dataInicialReal = dataInicial.orElse(LocalDate.MIN);
+
+        // Verifica se a segunda data é nula
+        LocalDate dataFinalReal = dataFinal.orElse(LocalDate.MAX);
+
+        // Coloca todos os times em uma lista de Time
+//        List<Time> times = timeService.findAll();
+        // Chama o método timeDaData e passa data e a lista de times como argumento
+//        String funcao = apiService.funcaoMaisComum(dataInicialReal, dataFinalReal, times);
+        // Criando um Map que irá receber o integrante mais usado
+        Map<String, Object> funcaoMaisComum = new HashMap<>();
+
+        // Passando a key "integrante mais usado" e pegando o nome do integrante
+//        funcaoMaisComum.put("Função mais comum:", funcao);
+
+        //Retorno da resposta
+//        return new ResponseEntity<>(funcaoMaisComum, HttpStatus.OK);
+        return null;
+
+    }
+
+
+    @GetMapping("/franquiamaisfamosa")
+    public ResponseEntity<Map<String, Object>> franquiaMaisFamosa(
+            // Pegando a data dos parâmetros da requisição
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> dataFinal) {
+
+        // Verifica se a primeira data é nula
+        LocalDate dataInicialReal = dataInicial.orElse(LocalDate.MIN);
+
+        // Verifica se a segunda data é nula
+        LocalDate dataFinalReal = dataFinal.orElse(LocalDate.MAX);
+
+        // Coloca todos os times em uma lista de Time
+//        List<Time> times = timeService.findAll();
+        // Chama o método timeDaData e passa data e a lista de times como argumento
+//        String franquia = apiService.franquiaMaisFamosa(dataInicialReal, dataFinalReal, times);
+        // Criando um Map que irá receber o integrante mais usado
+        Map<String, Object> franquiaMaisFamosa = new HashMap<>();
+
+        // Passando a key "integrante mais usado" e pegando o nome do integrante
+//        franquiaMaisFamosa.put("Franquia mais famosa:", franquia);
+
+        //Retorno da resposta
+//        return new ResponseEntity<>(franquiaMaisFamosa, HttpStatus.OK);
+        return null;
+
+    }
+
+    @GetMapping("/contagemfranquia")
+    public ResponseEntity<Map<String, Long>> contagemPorFranquia(
+            // Pegando a data dos parâmetros da requisição
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> dataFinal) {
+
+        // Verifica se a primeira data é nula
+        LocalDate dataInicialReal = dataInicial.orElse(LocalDate.MIN);
+
+        // Verifica se a segunda data é nula
+        LocalDate dataFinalReal = dataFinal.orElse(LocalDate.MAX);
+
+        // Coloca todos os times em uma lista de Time
+//        List<Time> times = timeService.findAll();
+        // Chama o método timeDaData e passa data e a lista de times como argumento
+//        Map<String, Long> franquia = apiService.contagemPorFranquia(dataInicialReal, dataFinalReal, times);
+
+        //Retorno da resposta
+//        return new ResponseEntity<>(franquia, HttpStatus.OK);
+        return null;
+
+    }
+
+    @GetMapping("/contagemfuncao")
+    public ResponseEntity<Map<String, Long>> contagemPorFuncao(
+            // Pegando a data dos parâmetros da requisição
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> dataFinal) {
+
+        // Verifica se a primeira data é nula
+        LocalDate dataInicialReal = dataInicial.orElse(LocalDate.MIN);
+
+        // Verifica se a segunda data é nula
+        LocalDate dataFinalReal = dataFinal.orElse(LocalDate.MAX);
+
+        // Coloca todos os times em uma lista de Time
+//        List<Time> times = timeService.findAll();
+        // Chama o método timeDaData e passa data e a lista de times como argumento
+//        Map<String, Long> franquia = apiService.contagemPorFuncao(dataInicialReal, dataFinalReal, times);
+
+        //Retorno da resposta
+//        return new ResponseEntity<>(franquia, HttpStatus.OK);
+        return null;
+    }
 }

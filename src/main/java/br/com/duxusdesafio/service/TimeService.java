@@ -24,6 +24,6 @@ public interface TimeService {
 
     TimeDTO timeDaData(LocalDate data);
 
-    TimeDTO timeMaisComum(LocalDate dataInicial, LocalDate dataFinal);
+    List<String> timeMaisComum(LocalDate dataInicial, LocalDate dataFinal);
 
 }
