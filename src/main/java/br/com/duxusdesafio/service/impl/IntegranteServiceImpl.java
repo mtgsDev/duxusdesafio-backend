@@ -12,11 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Function;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -77,36 +73,34 @@ public class IntegranteServiceImpl implements IntegranteService {
         return null;
     }
 
-    @Override
-    public IntegranteDTO integranteMaisUsado(LocalDate dataInicial, LocalDate dataFinal) {
-        // Recupera todos os times dentro do período especificado
-        List<Time> times = timeRepository.findByDataBetween(dataInicial, dataFinal);
-
-        // Mapeia os integrantes de todos os times dentro do período
-        List<Integrante> integrantes = times.stream()
-                .flatMap(time -> time.getComposicaoTime().stream())
-                .map(ComposicaoTime::getIntegrante)
-                .filter(Objects::nonNull) // Filtra integrantes não nulos
-                .toList();
-
-        // Conta a ocorrência de cada integrante
-        Map<Integrante, Long> countByIntegrante = integrantes.stream()
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-
-        // Encontra o integrante com mais ocorrências
-        Integrante integranteMaisUsado = countByIntegrante.entrySet().stream()
-                .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .orElse(null);
-
-        // Converte o integrante mais usado para DTO
-        if (integranteMaisUsado != null) {
-            return convertToDTO(integranteMaisUsado);
-        } else {
-            return null;
-        }
-    }
-
+//    public IntegranteDTO integranteMaisUsado(LocalDate dataInicial, LocalDate dataFinal) {
+//        // Recupera todos os times dentro do período especificado
+//        List<Time> times = timeRepository.findByDataBetween(dataInicial, dataFinal);
+//
+//        // Mapeia os integrantes de todos os times dentro do período
+//        List<Integrante> integrantes = times.stream()
+//                .flatMap(time -> time.getComposicaoTime().stream())
+//                .map(ComposicaoTime::getIntegrante)
+//                .filter(Objects::nonNull) // Filtra integrantes não nulos
+//                .toList();
+//
+//        // Conta a ocorrência de cada integrante
+//        Map<Integrante, Long> countByIntegrante = integrantes.stream()
+//                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+//
+//        // Encontra o integrante com mais ocorrências
+//        Integrante integranteMaisUsado = countByIntegrante.entrySet().stream()
+//                .max(Map.Entry.comparingByValue())
+//                .map(Map.Entry::getKey)
+//                .orElse(null);
+//
+//        // Converte o integrante mais usado para DTO
+//        if (integranteMaisUsado != null) {
+//            return convertToDTO(integranteMaisUsado);
+//        } else {
+//            return null;
+//        }
+//    }
 
     private IntegranteDTO toIntegranteDTO(ComposicaoTimeDTO composicaoTimeDTO) {
         IntegranteDTO integranteDTO = new IntegranteDTO();
@@ -134,6 +128,64 @@ public class IntegranteServiceImpl implements IntegranteService {
         // Consultar se existe algum integrante com os mesmos atributos
         return integranteRepository.findByNomeAndFuncaoAndFranquia(nome, funcao, franquia).isPresent();
     }
+    @Override
+    public IntegranteDTO integranteMaisComum(LocalDate dataInicial, LocalDate dataFinal) {
+        List<Time> timesNoPeriodo = timeRepository.findByDataBetween(dataInicial, dataFinal);
+
+        // Mapa para contar o número de ocorrências de cada integrante
+        Map<Integrante, Long> countByIntegrante = new HashMap<>();
+
+        // Percorre os times no período e conta as ocorrências de cada integrante
+        for (Time time : timesNoPeriodo) {
+            for (ComposicaoTime composicao : time.getComposicaoTime()) {
+                Integrante integrante = composicao.getIntegrante();
+                Long count = countByIntegrante.getOrDefault(integrante, 0L);
+                countByIntegrante.put(integrante, count + 1);
+            }
+        }
+
+        // Encontra o integrante com mais ocorrências
+        Integrante integranteMaisComum = countByIntegrante.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
+
+        // Converte o integrante mais comum para DTO
+        if (integranteMaisComum != null) {
+            return convertToDTO(integranteMaisComum);
+        } else {
+            return null;
+        }
+    }
+
+
+    @Override
+    public Integrante integranteMaisUsado(LocalDate dataInicial, LocalDate dataFinal){
+        List<Time> todosOsTimes = timeRepository.findAll();
+        // TODO Implementar método seguindo as instruções!
+        Stream<Integrante> IStream = StreamMapper(todosOsTimes, dataInicial, dataFinal);
+        // Mapeia ComposicaoTime para Integrante
+
+        return IStream.min(Comparator.comparing(String::valueOf)).orElse(null);
+    }
+
+    private Stream<Integrante> StreamMapper(List<Time> todosOsTimes, LocalDate dataInicial, LocalDate dataFinal) {
+        if (dataInicial == null || dataFinal == null) {
+            return todosOsTimes.stream()
+                    .flatMap(time -> time.getComposicaoTime().stream()) // FlatMap para obter uma stream de ComposicaoTime
+                    .map(ComposicaoTime::getIntegrante);
+        }
+        List<Time> mapper = durantePeriodo(todosOsTimes, dataInicial, dataFinal);
+
+        return mapper.stream()
+                .flatMap(time -> time.getComposicaoTime().stream()) // FlatMap para obter uma stream de ComposicaoTime
+                .map(ComposicaoTime::getIntegrante); // Mapeia ComposicaoTime para Integrante
+    }
+
+    private List<Time> durantePeriodo(List<Time> todosOsTimes, LocalDate dataInicial, LocalDate dataFinal) {
+        return todosOsTimes.stream().filter(time -> !time.getData().isBefore(dataInicial) && !time.getData().isAfter(dataFinal)).toList();
+    }
+
 
     private IntegranteDTO convertToDTO(Integrante integrante) {
         IntegranteDTO integranteDTO = new IntegranteDTO();

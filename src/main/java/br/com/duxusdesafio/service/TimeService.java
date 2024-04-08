@@ -1,8 +1,6 @@
 package br.com.duxusdesafio.service;
 
 import br.com.duxusdesafio.dto.TimeDTO;
-import br.com.duxusdesafio.model.Time;
-import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -36,5 +34,4 @@ public interface TimeService {
     Map<String, Long> contagemPorFuncao(LocalDate dataInicial, LocalDate dataFinal);
 
     Map<String, Long> contagemPorFranquia(LocalDate dataInicial, LocalDate dataFinal);
-
 }

@@ -117,7 +117,7 @@ public class TimeServiceImpl implements TimeService {
         timeRepository.deleteById(id);
     }
 
-@Override
+    @Override
     public String funcaoMaisComum(LocalDate dataInicial, LocalDate dataFinal){
         List<Time> times = timeRepository.findByDataBetween(dataInicial, dataFinal);
 
@@ -127,8 +127,6 @@ public class TimeServiceImpl implements TimeService {
                 .map(ComposicaoTime::getIntegrante)
                 .filter(Objects::nonNull) // Filtra integrantes não nulos
                 .toList();
-
-
 
         // Obtém a lista de nomes de integrantes dos times no período e conta a ocorrencia de cada nome de integrante
         List<String> funcaoComum = integrantes.stream().map(Integrante::getFuncao).toList();
@@ -148,13 +146,6 @@ public class TimeServiceImpl implements TimeService {
         return T.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }
 
-    private TimeDTO convertToDTO(Time time) {
-        TimeDTO timeDTO = new TimeDTO();
-        timeDTO.setId(time.getId());
-        timeDTO.setNome(time.getNome());
-        timeDTO.setData(time.getData());
-        return timeDTO;
-    }
 
     @Override
     public TimeDTO timeDaData(LocalDate data) {
@@ -221,19 +212,6 @@ public class TimeServiceImpl implements TimeService {
         return MaisComum(franquiaMaisFamosa);
     }
 
-    private Stream<Integrante> StreamMapper(List<Time> todosOsTimes, LocalDate dataInicial, LocalDate dataFinal) {
-        if (dataInicial == null || dataFinal == null) {
-            return todosOsTimes.stream()
-                    .flatMap(time -> time.getComposicaoTime().stream()) // FlatMap para obter uma stream de ComposicaoTime
-                    .map(ComposicaoTime::getIntegrante);
-        }
-        List<Time> mapper = durantePeriodo(todosOsTimes, dataInicial, dataFinal);
-
-        return mapper.stream()
-                .flatMap(time -> time.getComposicaoTime().stream()) // FlatMap para obter uma stream de ComposicaoTime
-                .map(ComposicaoTime::getIntegrante); // Mapeia ComposicaoTime para Integrante
-    }
-
     @Override
     public Map<String, Long> contagemPorFuncao(LocalDate dataInicial, LocalDate dataFinal) {
         List<Time> todosOsTimes = timeRepository.findAll();
@@ -267,13 +245,29 @@ public class TimeServiceImpl implements TimeService {
     }
 
     // Método auxiliar para verificar se uma data está dentro do intervalo
+    private Stream<Integrante> StreamMapper(List<Time> todosOsTimes, LocalDate dataInicial, LocalDate dataFinal) {
+        if (dataInicial == null || dataFinal == null) {
+            return todosOsTimes.stream()
+                    .flatMap(time -> time.getComposicaoTime().stream()) // FlatMap para obter uma stream de ComposicaoTime
+                    .map(ComposicaoTime::getIntegrante);
+        }
+        List<Time> mapper = durantePeriodo(todosOsTimes, dataInicial, dataFinal);
+
+        return mapper.stream()
+                .flatMap(time -> time.getComposicaoTime().stream()) // FlatMap para obter uma stream de ComposicaoTime
+                .map(ComposicaoTime::getIntegrante); // Mapeia ComposicaoTime para Integrante
+    }
     private boolean isDateInRange(LocalDate date, LocalDate startDate, LocalDate endDate) {
         return !date.isBefore(startDate) && !date.isAfter(endDate);
     }
-
     private List<Time> durantePeriodo(List<Time> todosOsTimes, LocalDate dataInicial, LocalDate dataFinal) {
         return todosOsTimes.stream().filter(time -> !time.getData().isBefore(dataInicial) && !time.getData().isAfter(dataFinal)).toList();
     }
-
-
+    private TimeDTO convertToDTO(Time time) {
+        TimeDTO timeDTO = new TimeDTO();
+        timeDTO.setId(time.getId());
+        timeDTO.setNome(time.getNome());
+        timeDTO.setData(time.getData());
+        return timeDTO;
+    }
 }
